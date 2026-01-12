@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.github.matita008.plugins'
+group = 'io.github.matita008.plugins'
 version = '1.0.0'
 
 repositories {
