@@ -1,6 +1,6 @@
 name: PluginBase
 version: '1.0.0'
-main: io.matita08.plugins.base.PluginBase
+main: com.github.matita008.plugins.base.ApiPlugin
 api-version: '1.21'
 prefix: matita-commons
 load: STARTUP

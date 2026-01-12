@@ -1,8 +1,8 @@
-package io.matita08.plugins.base;
+package com.github.matita008.plugins.base;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PluginBase extends JavaPlugin {
+public final class ApiPlugin extends JavaPlugin {
    
    @Override
    public void onEnable() {
