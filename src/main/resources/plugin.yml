@@ -1,0 +1,10 @@
+name: PluginBase
+version: '1.0.0'
+main: io.matita08.plugins.base.PluginBase
+api-version: '1.21'
+prefix: matita-commons
+load: STARTUP
+authors: [ matita08 ]
+description: An API/Wrapper
+
+softdepend: ["PlaceholderAPI"]
