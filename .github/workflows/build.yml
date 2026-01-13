@@ -1,4 +1,4 @@
-name: Build Java with Gradle and upload new release to github releases
+name: Build and upload new release to github releases
 
 on:
   label:

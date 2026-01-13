@@ -2,10 +2,11 @@ plugins {
     id 'java'
     id 'java-library'
     id 'maven-publish'
+    id 'org.jreleaser' version '1.22.0'
 }
 
 group = 'io.github.matita008.plugins'
-version = '1.0.0'
+version = '1.0.0-ALFA'
 
 repositories {
     mavenCentral()
@@ -34,6 +35,9 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
+
+    withJavadocJar()
+    withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -64,12 +68,7 @@ publishing {
             }
         }
         maven {
-            name = "central"
-            url = uri("https://central.sonatype.org/api/v1/publisher/upload")
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
-            }
+            url = layout.buildDirectory.dir('staging-deploy')
         }
     }
 
@@ -79,6 +78,42 @@ publishing {
             artifactId = 'base'
             groupId = project.group
             version = project.version
+
+            pom {
+                name = 'base'
+                description = 'A plugin library for other bukkit plugins'
+                url = 'https://github.com/Matita008/basePlugin'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'matita008'
+                        name = 'Matita008'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/Matita008/basePlugin.git'
+                    developerConnection = 'scm:git:ssh://github.com/Matita008/basePlugin.git'
+                    url = 'http://github.com/Matita008/basePlugin'
+                }
+            }
+        }
+    }
+}
+
+jreleaser {
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('build/staging-deploy')
+                }
+            }
         }
     }
 }

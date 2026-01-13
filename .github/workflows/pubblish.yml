@@ -28,6 +28,10 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
+      - name: create jreleaser config file
+        run: echo JRELEASER_MAVENCENTRAL_USERNAME = ${{ secrets.CENTRAL_USERNAME }} >~/.jreleaser/config.toml;\
+             echo JRELEASER_MAVENCENTRAL_PASSWORD = ${{ secrets.CENTRAL_TOKEN }} >>~/.jreleaser/config.toml
+
       - name: Publish package
         run: ./gradlew publish
         env:
