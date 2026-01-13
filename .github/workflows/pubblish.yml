@@ -29,9 +29,12 @@ jobs:
         run: chmod +x gradlew
 
       - name: create jreleaser config file
-        run: mkdir -p ~/.jreleaser;\
-             echo JRELEASER_MAVENCENTRAL_USERNAME = ${{ secrets.CENTRAL_USERNAME }} >~/.jreleaser/config.toml;\
-             echo JRELEASER_MAVENCENTRAL_PASSWORD = ${{ secrets.CENTRAL_TOKEN }} >>~/.jreleaser/config.toml
+        run: |
+          mkdir -p ~/.jreleaser
+          cat > ~/.jreleaser/config.toml <<'EOF'
+          JRELEASER_MAVENCENTRAL_USERNAME=${{ secrets.CENTRAL_USERNAME }}
+          JRELEASER_MAVENCENTRAL_PASSWORD=${{ secrets.CENTRAL_TOKEN }}
+          EOF
 
       - name: Publish package
         run: ./gradlew publish
