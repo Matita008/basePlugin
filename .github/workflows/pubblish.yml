@@ -37,18 +37,8 @@ jobs:
           JRELEASER_MAVENCENTRAL_PASSWORD=${{ secrets.CENTRAL_TOKEN }}
           EOF
 
-      - name: Publish package
-        run: ./gradlew publish
-        env:
-          MAVEN_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
       - name: Run JReleaser
-        uses: jreleaser/release-action@v2
-        with:
-          setup-java: false
+        run: ./gradlew jreleaserFullRelease
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
