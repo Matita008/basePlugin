@@ -52,6 +52,13 @@ jobs:
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+          JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_SONATYPE_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_SONATYPE_PASSWORD: ${{ secrets.CENTRAL_TOKEN }}
+          JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_SONATYPE_NAMESPACE: io.github.matita008
+
+          JRELEASER_GPG_PRIVATE_KEY: ${{ secrets.JRELEASER_GPG_PRIVATE_KEY }}
+          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
+
       # Persist logs
       - name: JReleaser release output
         if: always()
