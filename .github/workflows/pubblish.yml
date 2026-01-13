@@ -37,8 +37,10 @@ jobs:
           EOF
 
       - name: Publish package
-        if: false
         run: ./gradlew publish
+        with:
+          setup-java: false
+
         env:
           MAVEN_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN }}
