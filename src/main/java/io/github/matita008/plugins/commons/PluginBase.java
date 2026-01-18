@@ -1,7 +1,7 @@
-package com.github.matita008.plugins.commons;
+package io.github.matita008.plugins.commons;
 
-import com.github.matita008.plugins.commons.logging.Log;
-import com.github.matita008.plugins.commons.storage.Storage;
+import io.github.matita008.plugins.commons.logging.Log;
+import io.github.matita008.plugins.commons.storage.Storage;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public abstract class PluginBase extends JavaPlugin {
    private final List<Service> services = new ArrayList<>();
    public void loadService(Service service){
       if(service == null) {
-         Log.getLog().log(Level.WARNING, "Please report this to the devs (error: Service is null)", new NullPointerException());
+         Log.log(Level.WARNING, "Please report this to the devs (error: Service is null)", new NullPointerException());
          return;
       }
       service.load();

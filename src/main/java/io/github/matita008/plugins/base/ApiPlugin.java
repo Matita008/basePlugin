@@ -1,4 +1,4 @@
-package com.github.matita008.plugins.base;
+package io.github.matita008.plugins.base;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

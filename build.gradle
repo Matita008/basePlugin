@@ -1,12 +1,14 @@
 plugins {
     id 'java'
     id 'java-library'
-    id 'maven-publish'
-    id 'org.jreleaser' version '1.22.0'
+    //id 'maven-publish'
+    //id 'signing'
+    id "com.vanniktech.maven.publish" version "0.35.0"
+    //id 'org.jreleaser' version '1.22.0'
 }
 
-group = 'io.github.matita008.plugins'
-version = '1.0.0-ALFA4'
+group = 'io.github.matita008'
+version = '1.0.1-ALFA'
 
 repositories {
     mavenCentral()
@@ -19,10 +21,8 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.18-R0.1-SNAPSHOT")
 
-
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
-
     testCompileOnly("org.projectlombok:lombok:1.18.42")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
 }
@@ -36,8 +36,8 @@ java {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
 
-    withJavadocJar()
-    withSourcesJar()
+    //withSourcesJar()
+    //withJavadocJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -57,6 +57,12 @@ processResources {
     }
 }
 
+/*
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
 publishing {
     repositories {
         maven {
@@ -67,53 +73,206 @@ publishing {
                 password = System.getenv("GITHUB_TOKEN")
             }
         }
+
         maven {
+            name = "StagingDeploy"
             url = layout.buildDirectory.dir('staging-deploy')
         }
     }
 
     publications {
         mavenJava(MavenPublication) {
-            from components.java
-            artifactId = 'base'
             groupId = project.group
+            artifactId = 'base-plugin'
             version = project.version
 
+            from components.java
+            
+            // Ensure javadoc and sources are included
+            artifact sourcesJar
+            artifact javadocJar
+
             pom {
-                name = 'base'
+                name = 'Base Plugin'
                 description = 'A plugin library for other bukkit plugins'
                 url = 'https://github.com/Matita008/basePlugin'
+                inceptionYear = '2020'
+                
                 licenses {
                     license {
                         name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
                     }
                 }
+                
                 developers {
                     developer {
-                        id = 'matita008'
+                        id = 'Matita008'
                         name = 'Matita008'
+                        url = 'https://github.com/Matita008/'
                     }
                 }
+                
                 scm {
-                    connection = 'scm:git:https://github.com/Matita008/basePlugin.git'
-                    developerConnection = 'scm:git:ssh://github.com/Matita008/basePlugin.git'
-                    url = 'http://github.com/Matita008/basePlugin'
+                    connection = 'scm:git:git://github.com/Matita008/basePlugin.git'
+                    developerConnection = 'scm:git:ssh://git@github.com/Matita008/basePlugin.git'
+                    url = 'https://github.com/Matita008/basePlugin'
                 }
             }
         }
     }
 }
+*/
+mavenPublishing {
+    coordinates(project.group, "base-plugin", project.version)
+    //groupId = project.group
+    //artifactId = 'base-plugin'
+    //version = project.version
+    //coordinates("com.example.mylibrary", "library-name", "1.0.3-SNAPSHOT")
 
+    pom {
+        name = 'Base Plugin'
+        description = 'A plugin library for other bukkit plugins'
+        url = 'https://github.com/Matita008/basePlugin'
+        inceptionYear = '2020'
+        licenses {
+            license {
+                name = 'MIT License'
+                url = 'https://opensource.org/licenses/MIT'
+            }
+        }
+        developers {
+            developer {
+                id = 'Matita008'
+                name = 'Matita008'
+                url = 'https://github.com/Matita008/'
+            }
+        }
+        scm {
+            connection = 'scm:git:git://github.com/Matita008/basePlugin.git'
+            developerConnection = 'scm:git:ssh://git@github.com/Matita008/basePlugin.git'
+            url = 'https://github.com/Matita008/basePlugin'
+        }
+    }
+}
+
+// signing {
+//     def signingKey = /*System.getenv("JRELEASER_GPG_PRIVATE_KEY") ?: */findProperty("signing.keyId")
+//     def signingPassword = /*System.getenv("JRELEASER_GPG_PASSPHRASE") ?: */findProperty("signing.password")
+//
+//     if (signingKey && signingPassword) {
+//         useInMemoryPgpKeys(signingKey, signingPassword)
+//     }
+//
+//     sign publishing.publications.mavenJava
+// }
+
+/*
+tasks.register('signMavenJavaPublication') {
+    logger.warn("skipped signing")
+}//*/
+
+// Task to prepare artifacts for Maven Central
+//tasks.register('prepareForCentral') {
+//    dependsOn 'build', 'publishMavenJavaPublicationToStagingDeployRepository'
+//
+//    description = 'Prepares signed artifacts with checksums for Maven Central upload'
+//    group = 'publishing'
+//
+//    doLast {
+//        def stagingDir = layout.buildDirectory.dir('staging-deploy').get().asFile
+//        def deployBundle = layout.buildDirectory.file("deploy-bundle-${project.version}.tar.gz").get().asFile
+//
+//        println "Staging directory: ${stagingDir}"
+//        println "Creating deployment bundle: ${deployBundle}"
+//
+//        // Create tar.gz bundle
+//        ant.tar(destfile: deployBundle, compression: 'gzip') {
+//            fileset(dir: stagingDir) {
+//                include(name: '**/*')
+//            }
+//        }
+//
+//        println "Bundle created successfully at: ${deployBundle.absolutePath}"
+//    }
+//}
+
+// Ensure signing happens before prepareForCentral
+// tasks.named('publishMavenJavaPublicationToStagingDeployRepository') {
+//     dependsOn 'signMavenJavaPublication'
+// }
+/*
+tasks.withType(Jar) { task ->
+    task.doLast {
+        ant.checksum algorithm: 'md5', file: it.archivePath
+        ant.checksum algorithm: 'sha1', file: it.archivePath
+    }
+}
+*/
+/*
 jreleaser {
+    project {
+        name = 'base-plugin'
+        description = 'A plugin library for other bukkit plugins'
+        authors = ['Matita008']
+        license = 'MIT'
+        copyright = 'Matita008'
+        inceptionYear = '2026'
+        links {
+            homepage = 'https://github.com/Matita008/basePlugin'
+        }
+    }
+    
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+    
     deploy {
         maven {
             mavenCentral {
                 sonatype {
                     active = 'ALWAYS'
-                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    url = 'https://central.sonatype.com'
+                    applyMavenCentralRules = true
                     stagingRepository('build/staging-deploy')
+                    
+                    // Credentials from environment or properties
+                    username = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME") ?: 
+                              System.getenv("CENTRAL_USERNAME") ?: 
+                              findProperty("mavenCentralUsername")
+                    password = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD") ?: 
+                              System.getenv("CENTRAL_TOKEN") ?: 
+                              findProperty("mavenCentralPassword")
                 }
             }
         }
     }
+    
+    release {
+        github {
+            enabled = true
+            name = 'basePlugin'
+            overwrite = true
+            token = System.getenv("JRELEASER_GITHUB_TOKEN") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
+*/
+/*
+// Publish to GitHub Packages task
+tasks.register('publishToGitHub') {
+    dependsOn 'publishMavenJavaPublicationToGitHubPackagesRepository'
+    description = 'Publishes artifacts to GitHub Packages'
+    group = 'publishing'
+}
+
+// Combined publish task
+tasks.register('publishAll') {
+    dependsOn 'publishToGitHub', 'jreleaserDeploy'
+    description = 'Publishes to both GitHub Packages and Maven Central'
+    group = 'publishing'
+    
+    tasks.findByName('jreleaserDeploy').mustRunAfter('publishToGitHub')
+}
+*/
