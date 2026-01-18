@@ -4,4 +4,6 @@ module io.github.matita008.plugins.base {
    requires java.sql;
    requires static lombok;
    requires org.bukkit;
+   requires com.zaxxer.hikari;
+   requires org.jetbrains.annotations;
 }

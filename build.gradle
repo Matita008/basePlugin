@@ -2,10 +2,11 @@ plugins {
     id 'java'
     id 'java-library'
     id "com.vanniktech.maven.publish" version "0.35.0"
+    id("com.gradleup.shadow") version "9.3.1"
 }
 
 group = 'io.github.matita008'
-version = '1.0.1-ALFA6'
+version = '1.1.1'
 
 repositories {
     mavenCentral()
@@ -22,6 +23,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.42")
     testCompileOnly("org.projectlombok:lombok:1.18.42")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
+
+    implementation 'com.zaxxer:HikariCP:7.0.2'
 }
 
 def targetJavaVersion = 17
@@ -40,6 +43,18 @@ tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
     }
+}
+
+tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+    archiveClassifier.set('')
+
+    relocate 'com.zaxxer.hikari', 'com.github.matita008.internal.hikari'
+    exclude 'org.slf4j'
+    exclude 'org/slf4j/**'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/maven/org.slf4j/**'
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 processResources {

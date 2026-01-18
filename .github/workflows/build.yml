@@ -28,8 +28,8 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Build with Gradle Wrapper
-        run: ./gradlew build
+      - name: Build fatjar with Gradle Wrapper
+        run: ./gradlew clean shadowJar
 
       - name: Draft new build
         uses: softprops/action-gh-release@v2
