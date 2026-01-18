@@ -7,6 +7,11 @@ on:
       - unpublished
       - prereleased
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'The version'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -38,19 +43,16 @@ jobs:
         if: github.ref_type == 'release'
         with:
           files: build/libs/*.jar
-          overwrite_files: false
-          draft: true
-          generate_release_notes: true
 
       - name: Draft new build
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
           files: build/libs/*.jar
-          overwrite_files: false
+          tag_name: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
           draft: true
           generate_release_notes: true
-          tag_name: new-release
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v5.0.0

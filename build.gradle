@@ -108,6 +108,16 @@ publishing {
     }
 }
 
+if (System.getenv("JITCI") != null) {
+    tasks.withType(AbstractPublishToMaven).configureEach {
+        enabled = false
+    }
+
+    tasks.matching { it.name.toLowerCase().contains("sign") }.configureEach {
+        enabled = false
+    }
+}
+
 tasks.register('publishAll') {
     dependsOn("publishToMavenCentral")
     dependsOn("publishAllPublicationsToGitHubRepository")
