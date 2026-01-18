@@ -1,14 +1,11 @@
 plugins {
     id 'java'
     id 'java-library'
-    //id 'maven-publish'
-    //id 'signing'
     id "com.vanniktech.maven.publish" version "0.35.0"
-    //id 'org.jreleaser' version '1.22.0'
 }
 
 group = 'io.github.matita008'
-version = '1.0.1-ALFA'
+version = '1.0.1-ALFA6'
 
 repositories {
     mavenCentral()
@@ -35,9 +32,6 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-
-    //withSourcesJar()
-    //withJavadocJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -57,78 +51,8 @@ processResources {
     }
 }
 
-/*
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/Matita008/basePlugin")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-
-        maven {
-            name = "StagingDeploy"
-            url = layout.buildDirectory.dir('staging-deploy')
-        }
-    }
-
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = project.group
-            artifactId = 'base-plugin'
-            version = project.version
-
-            from components.java
-            
-            // Ensure javadoc and sources are included
-            artifact sourcesJar
-            artifact javadocJar
-
-            pom {
-                name = 'Base Plugin'
-                description = 'A plugin library for other bukkit plugins'
-                url = 'https://github.com/Matita008/basePlugin'
-                inceptionYear = '2020'
-                
-                licenses {
-                    license {
-                        name = 'MIT License'
-                        url = 'https://opensource.org/licenses/MIT'
-                    }
-                }
-                
-                developers {
-                    developer {
-                        id = 'Matita008'
-                        name = 'Matita008'
-                        url = 'https://github.com/Matita008/'
-                    }
-                }
-                
-                scm {
-                    connection = 'scm:git:git://github.com/Matita008/basePlugin.git'
-                    developerConnection = 'scm:git:ssh://git@github.com/Matita008/basePlugin.git'
-                    url = 'https://github.com/Matita008/basePlugin'
-                }
-            }
-        }
-    }
-}
-*/
 mavenPublishing {
     coordinates(project.group, "base-plugin", project.version)
-    //groupId = project.group
-    //artifactId = 'base-plugin'
-    //version = project.version
-    //coordinates("com.example.mylibrary", "library-name", "1.0.3-SNAPSHOT")
 
     pom {
         name = 'Base Plugin'
@@ -156,123 +80,20 @@ mavenPublishing {
     }
 }
 
-// signing {
-//     def signingKey = /*System.getenv("JRELEASER_GPG_PRIVATE_KEY") ?: */findProperty("signing.keyId")
-//     def signingPassword = /*System.getenv("JRELEASER_GPG_PASSPHRASE") ?: */findProperty("signing.password")
-//
-//     if (signingKey && signingPassword) {
-//         useInMemoryPgpKeys(signingKey, signingPassword)
-//     }
-//
-//     sign publishing.publications.mavenJava
-// }
-
-/*
-tasks.register('signMavenJavaPublication') {
-    logger.warn("skipped signing")
-}//*/
-
-// Task to prepare artifacts for Maven Central
-//tasks.register('prepareForCentral') {
-//    dependsOn 'build', 'publishMavenJavaPublicationToStagingDeployRepository'
-//
-//    description = 'Prepares signed artifacts with checksums for Maven Central upload'
-//    group = 'publishing'
-//
-//    doLast {
-//        def stagingDir = layout.buildDirectory.dir('staging-deploy').get().asFile
-//        def deployBundle = layout.buildDirectory.file("deploy-bundle-${project.version}.tar.gz").get().asFile
-//
-//        println "Staging directory: ${stagingDir}"
-//        println "Creating deployment bundle: ${deployBundle}"
-//
-//        // Create tar.gz bundle
-//        ant.tar(destfile: deployBundle, compression: 'gzip') {
-//            fileset(dir: stagingDir) {
-//                include(name: '**/*')
-//            }
-//        }
-//
-//        println "Bundle created successfully at: ${deployBundle.absolutePath}"
-//    }
-//}
-
-// Ensure signing happens before prepareForCentral
-// tasks.named('publishMavenJavaPublicationToStagingDeployRepository') {
-//     dependsOn 'signMavenJavaPublication'
-// }
-/*
-tasks.withType(Jar) { task ->
-    task.doLast {
-        ant.checksum algorithm: 'md5', file: it.archivePath
-        ant.checksum algorithm: 'sha1', file: it.archivePath
-    }
-}
-*/
-/*
-jreleaser {
-    project {
-        name = 'base-plugin'
-        description = 'A plugin library for other bukkit plugins'
-        authors = ['Matita008']
-        license = 'MIT'
-        copyright = 'Matita008'
-        inceptionYear = '2026'
-        links {
-            homepage = 'https://github.com/Matita008/basePlugin'
-        }
-    }
-    
-    signing {
-        active = 'ALWAYS'
-        armored = true
-    }
-    
-    deploy {
+publishing {
+    repositories {
         maven {
-            mavenCentral {
-                sonatype {
-                    active = 'ALWAYS'
-                    url = 'https://central.sonatype.com'
-                    applyMavenCentralRules = true
-                    stagingRepository('build/staging-deploy')
-                    
-                    // Credentials from environment or properties
-                    username = System.getenv("JRELEASER_MAVENCENTRAL_USERNAME") ?: 
-                              System.getenv("CENTRAL_USERNAME") ?: 
-                              findProperty("mavenCentralUsername")
-                    password = System.getenv("JRELEASER_MAVENCENTRAL_PASSWORD") ?: 
-                              System.getenv("CENTRAL_TOKEN") ?: 
-                              findProperty("mavenCentralPassword")
-                }
+            name = "GitHub"
+            url = uri("https://maven.pkg.github.com/Matita008/basePlugin")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }
-    
-    release {
-        github {
-            enabled = true
-            name = 'basePlugin'
-            overwrite = true
-            token = System.getenv("JRELEASER_GITHUB_TOKEN") ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
-}
-*/
-/*
-// Publish to GitHub Packages task
-tasks.register('publishToGitHub') {
-    dependsOn 'publishMavenJavaPublicationToGitHubPackagesRepository'
-    description = 'Publishes artifacts to GitHub Packages'
-    group = 'publishing'
 }
 
-// Combined publish task
 tasks.register('publishAll') {
-    dependsOn 'publishToGitHub', 'jreleaserDeploy'
-    description = 'Publishes to both GitHub Packages and Maven Central'
-    group = 'publishing'
-    
-    tasks.findByName('jreleaserDeploy').mustRunAfter('publishToGitHub')
+    dependsOn("publishToMavenCentral")
+    dependsOn("publishAllPublicationsToGitHubRepository")
 }
-*/

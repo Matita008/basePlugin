@@ -28,45 +28,13 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Build and prepare artifacts
-        run: ./gradlew clean build prepareForCentral
+      - name: Deploy to Maven Central and GitHub packages
+        run: ./gradlew clean publishAll
         env:
-          JRELEASER_GPG_PRIVATE_KEY: ${{ secrets.JRELEASER_GPG_PRIVATE_KEY }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
-
-      - name: Publish to GitHub Packages
-        run: ./gradlew publishToGitHub
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Deploy to Maven Central
-        run: ./gradlew jreleaserDeploy
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.CENTRAL_TOKEN }}
-          JRELEASER_GPG_PRIVATE_KEY: ${{ secrets.JRELEASER_GPG_PRIVATE_KEY }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
-
-      - name: Create GitHub Release
-        run: ./gradlew jreleaserRelease
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Persist logs and artifacts
-      - name: Upload JReleaser logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: jreleaser-logs
-          path: |
-            out/jreleaser/trace.log
-            out/jreleaser/output.properties
-
-      - name: Upload deployment bundle
-        if: false
-        uses: actions/upload-artifact@v4
-        with:
-          name: maven-central-bundle
-          path: build/deploy-bundle-*.tar.gz
+          GITHUB_ACTOR: Releaser
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_PASSPHRASE }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.KEY_ID }}

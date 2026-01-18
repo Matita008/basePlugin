@@ -1,3 +1,4 @@
+@SuppressWarnings("module") //matita008 is my github name
 module io.github.matita008.plugins.base {
    requires java.logging;
    requires java.sql;
