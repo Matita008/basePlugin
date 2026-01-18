@@ -1,9 +1,11 @@
 name: Build and upload new release to github releases
 
 on:
-  label:
+  release:
     types:
       - created
+      - unpublished
+      - prereleased
   workflow_dispatch:
 
 jobs:
