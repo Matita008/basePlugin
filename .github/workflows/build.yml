@@ -35,7 +35,7 @@ jobs:
 
       - name: Draft new build
         uses: softprops/action-gh-release@v2
-        if: github.ref_type == 'tag'
+        if: github.ref_type == 'release'
         with:
           files: build/libs/*.jar
           overwrite_files: false
@@ -44,7 +44,7 @@ jobs:
 
       - name: Draft new build
         uses: softprops/action-gh-release@v2
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         with:
           files: build/libs/*.jar
           overwrite_files: false
@@ -57,6 +57,11 @@ jobs:
         with:
           name: build.jar
           path: build/libs
+
+      - name: debug
+        run: |
+          echo $github.ref_type; \
+          echo $github.ref
 
   dependency-submission:
     runs-on: ubuntu-latest
