@@ -25,6 +25,13 @@ public abstract class Database implements Storage{
       }
    }
    
+   /**
+    * Retrieves a {@code Data.Builder} instance associated with the specified class.
+    *
+    * @param clazz the class to search for a valid {@code Data.Builder} provider; it must extend {@code Data}.
+    * @return a {@code Data.Builder} instance if a valid static method or field is found in the class; otherwise, returns {@code null}.
+    * @see Loader
+    */
    protected Data.Builder getBuilder(Class<? extends Data> clazz) {
       Method[] methods = clazz.getDeclaredMethods();
       

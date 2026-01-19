@@ -29,6 +29,12 @@ public abstract class PluginBase extends JavaPlugin {
       services.clear();
    }
    
+   /**
+    * Loads the specified service into the current plugin instance.
+    * If the service is null, a warning will be logged, and the method will return without proceeding further.
+    *
+    * @param service the service that needs to be loaded; must not be null
+    */
    public void loadService(Service service){
       if(service == null) {
          Log.log(Level.WARNING, "Please report this to " + String.join(", ", getDescription().getAuthors()) + " (error: Service is null)", new NullPointerException());
@@ -38,6 +44,12 @@ public abstract class PluginBase extends JavaPlugin {
       services.add(service);
    }
    
+   /**
+    * Registers a new data class to be managed by the storage system of the current plugin.
+    * This method allows the plugin to define custom data types for use with its storage system.
+    *
+    * @param dataClass the class to be registered as a data type; must extend the {@link Data} interface
+    */
    public void registerDataClass(Class<? extends Data> dataClass){
       StorageManager.getStorageManager(this).addDataClass(dataClass);
    }
