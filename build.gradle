@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'io.github.matita008'
-version = '1.1.2'
+version = '2.1.1'
 
 repositories {
     mavenCentral()
@@ -25,6 +25,9 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
 
     implementation 'com.zaxxer:HikariCP:7.0.2'
+
+    // Compile-checking annotations
+    compileOnly("org.jetbrains:annotations:26.0.2")
 }
 
 def targetJavaVersion = 17

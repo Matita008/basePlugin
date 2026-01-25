@@ -1,0 +1,5 @@
+messages:
+  MISSING_PERMISSION: "Command not available"
+  NO_CONSOLE: "Command not available from the console"
+  MISSING_ARGS: ""
+  INTERNAL_ERROR: "Command not available"

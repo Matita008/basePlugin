@@ -18,6 +18,10 @@ public final class Log {
       this.prefix = "[" + prefix + "]";
    }
    
+   private Log(Log parent, String prefix) {
+      this.prefix = parent.prefix + " [" + prefix + "]";
+   }
+   
    public static Log getLog(Plugin plugin) {
       return Optional.ofNullable(logs.get(plugin)).orElseGet(() -> {
          Log log = new Log(plugin.getDescription().getPrefix());
@@ -61,6 +65,6 @@ public final class Log {
    }
    
    public Log addPrefix(String prefix) {
-      return new Log(this.prefix + " [" + prefix + "]");
+      return new Log(this, prefix);
    }
 }
